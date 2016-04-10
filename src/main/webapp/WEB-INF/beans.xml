@@ -12,7 +12,6 @@
  	http://cxf.apache.org/schemas/jaxws.xsd
  	http://www.springframework.org/schema/context
  	http://www.springframework.org/schema/context/spring-context-4.1.xsd">
-
 	<import resource="classpath:META-INF/cxf/cxf.xml" />
 	<context:component-scan base-package="com.adalwin.*" />
 
@@ -21,14 +20,53 @@
 			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />
 		</jaxrs:providers>
 		<jaxrs:serviceBeans>
-			<ref bean="cxfServiceImpl" />
+			<ref bean="cxfService" />
+			</jaxrs:serviceBeans>
+		<jaxrs:extensionMappings>
+			<entry key="json" value="application/json" />
+		
+		</jaxrs:extensionMappings>
+	</jaxrs:server>
+	
+	<jaxrs:server id="personService" address="/adalwinMongoServices">
+		<jaxrs:providers>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />
+		</jaxrs:providers>
+		<jaxrs:serviceBeans>
+			<ref bean="mongoService" />
 		</jaxrs:serviceBeans>
 		<jaxrs:extensionMappings>
 			<entry key="json" value="application/json" />
 		
 		</jaxrs:extensionMappings>
 	</jaxrs:server>
-
-    <bean id="cxfServiceImpl" class="com.adalwin.cxfrestservice.internal.CxfRestServiceImpl"/>
+	
+	 <!-- Factory bean that creates the Mongo instance --> 
+     <bean id="mongo" class="org.springframework.data.mongodb.core.MongoFactoryBean"> 
+     <property name="host" value="localhost"/> 
+     <property name="port" value="27017"/> 
+     
+     
+     </bean> 
+     
+ 	<!-- Define the MongoTemplate which handles connectivity with MongoDB --> 
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+     <constructor-arg name="mongo" ref="mongo"/> 
+     <constructor-arg name="databaseName" value="learn"/> 
+     </bean> 
+    <bean id="cxfService" class="com.adalwin.cxfrestservice.internal.CxfRestServiceImpl"/>
+	<bean id="mongoService" class="com.adalwin.cxfrestservice.internal.MongoServiceImpl"/>    
+    
+    
     <bean id="employeeDao" class="com.adalwin.cxfrestservice.dao.EmployeeDao"/>
+    <bean id="personDao" class="com.adalwin.cxfrestservice.dao.PersonDao"/>
+    <bean id="personRepo" class="com.adalwin.repository.PersonRepository"/>
+    <bean id="person" class="com.adalwin.cxfrestservice.model.Person"/>
+    <!-- Use this post processor to translate any MongoExceptions thrown in @Repository annotated classes --> 
+    <bean  class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/> 
+    
+    
+   
+     
+    
 </beans>
