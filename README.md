@@ -8,6 +8,7 @@ L-SNV5EDJDF8-M:Library aramar1$ cd /usr/local/opt/mongodb
 Command to Run MONGO : ./mongod --config /usr/local/etc/mongod.conf 
 
 Mongo Conf:
+
 systemLog:
   destination: file
   path: /usr/local/var/log/mongodb/mongo.log
