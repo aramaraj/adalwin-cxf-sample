@@ -15,7 +15,11 @@
 	<import resource="classpath:META-INF/cxf/cxf.xml" />
 	<context:component-scan base-package="com.adalwin.*" />
 
-	<jaxrs:server id="employeeService" address="/adalwinservices">
+    <context:annotation-config />
+
+
+
+	<jaxrs:server id="employeeService" address="/">
 		<jaxrs:providers>
 			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />
 		</jaxrs:providers>
@@ -54,6 +58,7 @@
      <constructor-arg name="mongo" ref="mongo"/> 
      <constructor-arg name="databaseName" value="learn"/> 
      </bean> 
+     
     <bean id="cxfService" class="com.adalwin.cxfrestservice.internal.CxfRestServiceImpl"/>
 	<bean id="mongoService" class="com.adalwin.cxfrestservice.internal.MongoServiceImpl"/>    
     
